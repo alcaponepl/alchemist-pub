@@ -11,8 +11,17 @@ const WIND_SPEED = 7
 const COUNT = 10
 
 const WindFarmInner = () => {
-  const rotations = useRef<Float32Array>(new Float32Array(COUNT))
+  const rotations = useRef<Float32Array>(
+    new Float32Array(COUNT).map(() => Math.random() * Math.PI * 2),
+  )
+  const randomSpeeds = useRef<Float32Array>(
+    new Float32Array(COUNT).map(() => 0.5 + Math.random()),
+  )
+  const randomYaws = useRef<Float32Array>(
+    new Float32Array(COUNT).map(() => Math.random() * Math.PI * 2),
+  )
   const bladesMap = useRef<Map<number, Group>>(new Map())
+  const turbineMap = useRef<Map<number, Group>>(new Map())
 
   const positions = useMemo<[number, number, number][]>(
     () =>
@@ -25,9 +34,9 @@ const WindFarmInner = () => {
   )
 
   useFrame((_, delta) => {
-    const step = WIND_SPEED * delta * Math.max(0.2, WIND_SPEED * 0.2)
+    const baseStep = WIND_SPEED * delta * Math.max(0.2, WIND_SPEED * 0.2)
     for (let i = 0; i < COUNT; i += 1) {
-      rotations.current[i] = (rotations.current[i] + step) % (Math.PI * 2)
+      rotations.current[i] = (rotations.current[i] + baseStep * randomSpeeds.current[i]) % (Math.PI * 2)
       const blades = bladesMap.current.get(i)
       if (blades) {
         blades.rotation.z = rotations.current[i]
@@ -39,17 +48,25 @@ const WindFarmInner = () => {
     <group>
       <mesh position={[0, -0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[200, 200]} />
-        <meshStandardMaterial color="#39424e" />
+        <meshLambertMaterial color="#39424e" />
       </mesh>
       {positions.map((position, index) => (
-        <Windmill
+        <group
           key={index}
-          ref={(group) => {
-            if (group) bladesMap.current.set(index, group)
-            else bladesMap.current.delete(index)
-          }}
           position={position}
-        />
+          rotation={[0, randomYaws.current[index], 0]}
+          ref={(g: Group | null) => {
+            if (g) turbineMap.current.set(index, g)
+            else turbineMap.current.delete(index)
+          }}
+        >
+          <Windmill
+            ref={(group: Group | null) => {
+              if (group) bladesMap.current.set(index, group)
+              else bladesMap.current.delete(index)
+            }}
+          />
+        </group>
       ))}
     </group>
   )
@@ -58,15 +75,14 @@ const WindFarmInner = () => {
 export const WindFarmPreview = () => (
   <Canvas
     dpr={1}
-    camera={{ position: [40, 30, 50], fov: 45, near: 0.1, far: 500 }}
-    gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}
+    camera={{ position: [40, 30, 50], fov: 45, near: 0.1, far: 200 }}
+    gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
     style={{ width: '100%', height: '100%' }}
   >
     <color attach="background" args={['#0f1720']} />
-    <fog attach="fog" args={['#0f1720', 60, 180]} />
-    <ambientLight intensity={0.8} />
-    <directionalLight position={[20, 30, 15]} intensity={1.2} />
-    <hemisphereLight args={['#b1d8ff', '#39424e', 0.4]} />
+    <fog attach="fog" args={['#0f1720', 50, 140]} />
+    <ambientLight intensity={1.0} />
+    <directionalLight position={[20, 30, 15]} intensity={1.0} />
     <Suspense fallback={null}>
       <WindFarmInner />
     </Suspense>

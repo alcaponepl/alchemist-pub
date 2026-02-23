@@ -1,73 +1,112 @@
 import { Canvas } from '@react-three/fiber'
-import { Suspense, useMemo, useState } from 'react'
+import { Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import {
-  Wind, Settings, Bell, AlertTriangle, MessageCircle,
-  ChevronRight, BarChart3
+  Wind, Bell, AlertTriangle, MessageCircle,
+  ChevronRight, BarChart3, ChevronDown
 } from 'lucide-react'
 import { DigitalTwinScene } from '../components/DigitalTwinScene'
-import { useWasm } from '../hooks/useWasm'
+import { perfStore, type PerfStats } from '../components/PerfMonitor'
+import { useWindFarmData } from '../hooks/useWindFarmData'
 
-const TURBINES = [
-  { id: 1, name: 'turbine_01', power: '3.5 MW', efficiency: '96.2%', status: 'online' },
-  { id: 2, name: 'turbine_02', power: '3.3 MW', efficiency: '91.8%', status: 'online' },
-  { id: 3, name: 'turbine_03', power: '2.8 MW', efficiency: '87.1%', status: 'warning' },
-  { id: 4, name: 'turbine_04', power: '3.4 MW', efficiency: '94.5%', status: 'online' },
-  { id: 5, name: 'turbine_05', power: '3.1 MW', efficiency: '89.3%', status: 'online' },
-  { id: 6, name: 'turbine_06', power: '0.0 MW', efficiency: '0%', status: 'offline' },
-  { id: 7, name: 'turbine_07', power: '3.2 MW', efficiency: '92.1%', status: 'online' },
-  { id: 8, name: 'turbine_08', power: '2.9 MW', efficiency: '88.4%', status: 'online' },
-  { id: 9, name: 'turbine_09', power: '3.6 MW', efficiency: '97.0%', status: 'online' },
-  { id: 10, name: 'turbine_10', power: '3.4 MW', efficiency: '93.8%', status: 'online' },
-]
+const usePerfStats = () => {
+  const [stats, setStats] = useState<PerfStats>(perfStore.stats)
 
-const ENERGY_BARS = [
-  72, 68, 75, 80, 78, 65, 70, 82, 88, 85, 90, 87, 92, 78, 82, 76, 71, 68,
-  74, 80, 85, 88, 91, 95, 78, 65, 72, 80, 84, 88, 90, 35, 86, 82, 78, 75,
-  70, 68, 74, 80, 85, 90, 88, 84, 80, 76, 72, 70
-]
+  useEffect(() => {
+    const unsub = perfStore.subscribe((s) => {
+      setStats({ ...s })
+    })
+    return unsub
+  }, [])
 
-const WIND_SPEED = 7
+  return stats
+}
+
+const useDraggable = (initialX: number, initialY: number) => {
+  const [pos, setPos] = useState({ x: initialX, y: initialY })
+  const dragging = useRef(false)
+  const offset = useRef({ x: 0, y: 0 })
+
+  const onPointerDown = useCallback((e: React.PointerEvent) => {
+    dragging.current = true
+    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
+    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
+  }, [pos])
+
+  const onPointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragging.current) return
+    setPos({
+      x: e.clientX - offset.current.x,
+      y: e.clientY - offset.current.y,
+    })
+  }, [])
+
+  const onPointerUp = useCallback(() => {
+    dragging.current = false
+  }, [])
+
+  return { pos, isDragging: dragging, onPointerDown, onPointerMove, onPointerUp }
+}
+
+const metricBarPercent = (value: number, min: number, max: number) =>
+  Math.round(((value - min) / (max - min)) * 100)
 
 export const Dashboard = () => {
-  const { bridge } = useWasm()
-  const [showAlert, setShowAlert] = useState(true)
-
-  const fallbackUpdate = useMemo(
-    () => (currentRotations: Float32Array<ArrayBufferLike>, delta: number) => {
-      const next = new Float32Array(currentRotations.length)
-      const step = WIND_SPEED * delta
-      for (let i = 0; i < currentRotations.length; i += 1) {
-        next[i] = (currentRotations[i] + step) % (Math.PI * 2)
-      }
-      return next
-    },
-    [],
-  )
-
-  const updateRotations = (
-    currentRotations: Float32Array<ArrayBufferLike>,
-    delta: number,
-  ) => {
-    if (!bridge) return fallbackUpdate(currentRotations, delta)
-    return bridge.update_turbines(currentRotations, WIND_SPEED, delta)
-  }
+  const farm = useWindFarmData()
+  const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())
+  const [focusTurbineIndex, setFocusTurbineIndex] = useState<number | null>(null)
+  const [perfExpanded, setPerfExpanded] = useState(true)
+  const perf = usePerfStats()
+  const perfDrag = useDraggable(232, 72)
 
   const now = new Date()
   const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
   const dateStr = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+
+  const fpsColor = perf.fps >= 55 ? 'var(--green-online)' : perf.fps >= 30 ? 'var(--amber-warning)' : 'var(--red-critical)'
+
+  const speedFactors = useMemo(
+    () => farm?.turbines.map((t) => t.speedFactor) ?? Array(10).fill(0),
+    [farm?.turbines]
+  )
+
+  const windSpeed = farm?.environment.windSpeed ?? 7
+  const windDirection = farm?.environment.windDirection ?? 225
+
+  const activeAlerts = useMemo(
+    () => (farm?.alerts.filter((a) => !dismissedAlerts.has(a.id)) ?? []).slice(-5),
+    [farm?.alerts, dismissedAlerts]
+  )
+
+  if (!farm) {
+    return (
+      <div className="dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--cyan-primary)', fontSize: 14 }}>
+          INITIALIZING TELEMETRY...
+        </span>
+      </div>
+    )
+  }
+
+  const { turbines, environment: env, summary, energyHistory } = farm
 
   return (
     <div className="dashboard">
       {/* 3D VIEWPORT */}
       <div className="dashboard__viewport">
         <Canvas
-          dpr={[1, 2]}
-          camera={{ position: [40, 30, 50], fov: 45, near: 0.1, far: 500 }}
-          gl={{ antialias: true, alpha: false, powerPreference: 'low-power' }}
+          dpr={1}
+          camera={{ position: [40, 30, 50], fov: 45, near: 0.1, far: 200 }}
+          gl={{ antialias: false, alpha: false, powerPreference: 'high-performance' }}
         >
           <Suspense fallback={null}>
-            <DigitalTwinScene windSpeed={WIND_SPEED} turbineCount={10} />
+            <DigitalTwinScene
+              windSpeed={windSpeed}
+              windDirection={windDirection}
+              turbineCount={turbines.length}
+              speedFactors={speedFactors}
+              focusTurbineIndex={focusTurbineIndex}
+            />
           </Suspense>
         </Canvas>
       </div>
@@ -92,16 +131,80 @@ export const Dashboard = () => {
         </div>
       </div>
 
-      {/* ALERT BANNER */}
-      {showAlert && (
-        <div className="dashboard__alert">
-          <div className="dashboard__alert-left">
-            <AlertTriangle size={14} className="dashboard__alert-icon" />
-            <span className="dashboard__alert-text">[WARN] turbine_03 vibration anomaly detected</span>
-          </div>
-          <button className="dashboard__alert-dismiss" onClick={() => setShowAlert(false)}>[dismiss]</button>
+      {/* ALERT BANNERS */}
+      {activeAlerts.length > 0 && (
+        <div className="dashboard__alerts-stack">
+          {activeAlerts.map((alert) => (
+            <div
+              key={alert.id}
+              className={`dashboard__alert ${alert.severity === 'critical' ? 'dashboard__alert--critical' : ''}`}
+            >
+              <div className="dashboard__alert-left">
+                <AlertTriangle size={14} className="dashboard__alert-icon" />
+                <span className="dashboard__alert-text">
+                  [{alert.severity === 'critical' ? 'CRIT' : 'WARN'}] {alert.turbineName} {alert.message}
+                </span>
+              </div>
+              <button
+                className="dashboard__alert-dismiss"
+                onClick={() => setDismissedAlerts((prev) => new Set(prev).add(alert.id))}
+              >
+                [dismiss]
+              </button>
+            </div>
+          ))}
         </div>
       )}
+
+      {/* SCENE PERFORMANCE PANEL */}
+      <div
+        className="scene-perf"
+        style={{ left: perfDrag.pos.x, top: perfDrag.pos.y }}
+        onPointerMove={perfDrag.onPointerMove}
+        onPointerUp={perfDrag.onPointerUp}
+      >
+        <div
+          className="scene-perf__header"
+          onPointerDown={perfDrag.onPointerDown}
+        >
+          <span className="scene-perf__title">SCENE PERFORMANCE</span>
+          <button className="scene-perf__toggle" onClick={() => setPerfExpanded(v => !v)}>
+            <ChevronDown size={14} className={`scene-perf__chevron ${perfExpanded ? '' : 'scene-perf__chevron--collapsed'}`} />
+          </button>
+        </div>
+        {perfExpanded && (
+          <div className="scene-perf__body">
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">FPS</span>
+              <span className="scene-perf__value" style={{ color: fpsColor }}>{perf.fps}</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">FRAME</span>
+              <span className="scene-perf__value">{perf.frameTime} ms</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">CALLS</span>
+              <span className="scene-perf__value">{perf.drawCalls}</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">TRIANGLES</span>
+              <span className="scene-perf__value">{(perf.triangles / 1000).toFixed(1)}k</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">GEOMETRIES</span>
+              <span className="scene-perf__value">{perf.geometries}</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">TEXTURES</span>
+              <span className="scene-perf__value">{perf.textures}</span>
+            </div>
+            <div className="scene-perf__row">
+              <span className="scene-perf__label">HEAP</span>
+              <span className="scene-perf__value">{perf.memory}</span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {/* LEFT PANEL — Metrics */}
       <div className="dashboard__left">
@@ -109,37 +212,53 @@ export const Dashboard = () => {
 
         <div className="metric-card">
           <span className="metric-card__label">// WIND_SPEED</span>
-          <span className="metric-card__value">12.4</span>
+          <span className="metric-card__value">{env.windSpeed.toFixed(1)}</span>
           <span className="metric-card__unit">m/s</span>
-          <div className="metric-card__bar"><div className="metric-card__bar-fill" style={{ width: '50%' }} /></div>
+          <div className="metric-card__bar">
+            <div className="metric-card__bar-fill" style={{ width: `${metricBarPercent(env.windSpeed, 0, 28)}%` }} />
+          </div>
         </div>
 
         <div className="metric-card">
           <span className="metric-card__label">// TURBULENCE</span>
-          <span className="metric-card__value">0.08</span>
+          <span className="metric-card__value">{env.turbulence.toFixed(2)}</span>
           <span className="metric-card__unit">TI index</span>
-          <div className="metric-card__bar"><div className="metric-card__bar-fill" style={{ width: '33%', background: 'var(--amber-warning)' }} /></div>
+          <div className="metric-card__bar">
+            <div
+              className="metric-card__bar-fill"
+              style={{
+                width: `${metricBarPercent(env.turbulence, 0, 0.25)}%`,
+                background: env.turbulence > 0.12 ? 'var(--amber-warning)' : undefined,
+              }}
+            />
+          </div>
         </div>
 
         <div className="metric-card">
           <span className="metric-card__label">// HUMIDITY</span>
-          <span className="metric-card__value">78</span>
+          <span className="metric-card__value">{Math.round(env.humidity)}</span>
           <span className="metric-card__unit">%RH</span>
-          <div className="metric-card__bar"><div className="metric-card__bar-fill" style={{ width: '78%' }} /></div>
+          <div className="metric-card__bar">
+            <div className="metric-card__bar-fill" style={{ width: `${Math.round(env.humidity)}%` }} />
+          </div>
         </div>
 
         <div className="metric-card">
           <span className="metric-card__label">// TEMPERATURE</span>
-          <span className="metric-card__value">4.2</span>
+          <span className="metric-card__value">{env.temperature.toFixed(1)}</span>
           <span className="metric-card__unit">°C</span>
-          <div className="metric-card__bar"><div className="metric-card__bar-fill" style={{ width: '45%' }} /></div>
+          <div className="metric-card__bar">
+            <div className="metric-card__bar-fill" style={{ width: `${metricBarPercent(env.temperature, -15, 40)}%` }} />
+          </div>
         </div>
 
         <div className="metric-card">
           <span className="metric-card__label">// AIR_PRESSURE</span>
-          <span className="metric-card__value">1013</span>
+          <span className="metric-card__value">{Math.round(env.airPressure)}</span>
           <span className="metric-card__unit">hPa</span>
-          <div className="metric-card__bar"><div className="metric-card__bar-fill" style={{ width: '85%' }} /></div>
+          <div className="metric-card__bar">
+            <div className="metric-card__bar-fill" style={{ width: `${metricBarPercent(env.airPressure, 980, 1050)}%` }} />
+          </div>
         </div>
       </div>
 
@@ -147,15 +266,22 @@ export const Dashboard = () => {
       <div className="dashboard__right">
         <div className="dashboard__right-header">
           <span className="dashboard__right-title">// TURBINE_STATUS</span>
-          <span className="dashboard__right-count">11 / 12 optimal</span>
+          <span className="dashboard__right-count">
+            {summary.optimalCount} / {summary.totalCount} optimal
+          </span>
         </div>
         <div className="dashboard__right-list">
-          {TURBINES.map(t => (
-            <div key={t.id} className="turbine-row">
+          {turbines.map(t => (
+            <div
+              key={t.id}
+              className={`turbine-row ${focusTurbineIndex === t.id - 1 ? 'turbine-row--active' : ''}`}
+              onClick={() => setFocusTurbineIndex(t.id - 1)}
+              style={{ cursor: 'pointer' }}
+            >
               <div className="turbine-row__icon"><Wind size={16} /></div>
               <div className="turbine-row__info">
                 <span className="turbine-row__name">{t.name}</span>
-                <span className="turbine-row__meta">{t.power} — {t.efficiency} eff</span>
+                <span className="turbine-row__meta">{t.power.toFixed(1)} MW — {t.efficiency.toFixed(1)}% eff</span>
               </div>
               <div className="turbine-row__status">
                 <span style={{
@@ -189,7 +315,7 @@ export const Dashboard = () => {
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <BarChart3 size={14} style={{ color: 'var(--cyan-primary)' }} />
             <span className="dashboard__bottom-title">ENERGY_OUTPUT</span>
-            <span className="dashboard__bottom-value">24.8 MW</span>
+            <span className="dashboard__bottom-value">{summary.totalPowerMW} MW</span>
             <span className="dashboard__bottom-unit">total output</span>
           </div>
           <div style={{ display: 'flex', gap: 12 }}>
@@ -198,7 +324,7 @@ export const Dashboard = () => {
           </div>
         </div>
         <div className="dashboard__bottom-body">
-          {ENERGY_BARS.map((h, i) => (
+          {energyHistory.map((h, i) => (
             <div
               key={i}
               className={`energy-bar ${h < 40 ? 'energy-bar--warning' : 'energy-bar--normal'}`}
@@ -211,22 +337,22 @@ export const Dashboard = () => {
       {/* CENTER HUD */}
       <div className="dashboard__hud">
         <div className="dashboard__hud-stat">
-          <span className="dashboard__hud-val">24.8</span>
+          <span className="dashboard__hud-val">{summary.totalPowerMW}</span>
           <span className="dashboard__hud-label">total MW</span>
         </div>
         <div className="dashboard__hud-divider" />
         <div className="dashboard__hud-stat">
-          <span className="dashboard__hud-val">87%</span>
+          <span className="dashboard__hud-val">{summary.capacityPercent}%</span>
           <span className="dashboard__hud-label">capacity</span>
         </div>
         <div className="dashboard__hud-divider" />
         <div className="dashboard__hud-stat">
-          <span className="dashboard__hud-val">11/12</span>
+          <span className="dashboard__hud-val">{summary.optimalCount}/{summary.totalCount}</span>
           <span className="dashboard__hud-label">optimal</span>
         </div>
         <div className="dashboard__hud-divider" />
         <div className="dashboard__hud-stat">
-          <span className="dashboard__hud-val">1</span>
+          <span className="dashboard__hud-val">{summary.alertCount}</span>
           <span className="dashboard__hud-label">alert</span>
         </div>
       </div>

@@ -1,57 +1,69 @@
 import { OrbitControls } from '@react-three/drei'
-import { useMemo } from 'react'
-import { WindFarm } from './WindFarm'
+import { useFrame, useThree } from '@react-three/fiber'
+import { useEffect, useRef } from 'react'
+import { Vector3 } from 'three'
+import { WindFarm, getTurbinePosition } from './WindFarm'
 import { PerfMonitor } from './PerfMonitor'
-import { useWasm } from '../hooks/useWasm'
 
 type Props = {
   windSpeed: number
+  windDirection: number
   turbineCount: number
+  speedFactors: number[]
+  focusTurbineIndex: number | null
 }
 
-export const DigitalTwinScene = ({ windSpeed, turbineCount }: Props) => {
-  const { bridge } = useWasm()
+function CameraController({ focusIndex }: { focusIndex: number | null }) {
+  const { camera, controls } = useThree()
+  const targetPos = useRef(new Vector3())
+  const cameraPos = useRef(new Vector3())
+  const animating = useRef(false)
+  const prevIndex = useRef<number | null>(null)
 
-  const fallbackUpdate = useMemo(
-    () => (currentRotations: Float32Array<ArrayBufferLike>, delta: number) => {
-      const next = new Float32Array(currentRotations.length)
-      const step = windSpeed * delta
-      for (let i = 0; i < currentRotations.length; i += 1) {
-        next[i] = (currentRotations[i] + step) % (Math.PI * 2)
-      }
-      return next
-    },
-    [windSpeed],
-  )
+  useEffect(() => {
+    if (focusIndex === null || focusIndex === prevIndex.current) return
+    prevIndex.current = focusIndex
 
-  const updateRotations = (
-    currentRotations: Float32Array<ArrayBufferLike>,
-    delta: number,
-  ) => {
-    if (!bridge) {
-      return fallbackUpdate(currentRotations, delta)
+    const [tx, , tz] = getTurbinePosition(focusIndex)
+    targetPos.current.set(tx, 8, tz)
+    cameraPos.current.set(tx + 18, 14, tz + 18)
+    animating.current = true
+  }, [focusIndex])
+
+  useFrame(() => {
+    if (!animating.current || !controls) return
+    const orbit = controls as any
+    orbit.target.lerp(targetPos.current, 0.04)
+    camera.position.lerp(cameraPos.current, 0.04)
+    orbit.update()
+
+    if (camera.position.distanceTo(cameraPos.current) < 0.2) {
+      animating.current = false
     }
+  })
 
-    return bridge.update_turbines(currentRotations, windSpeed, delta)
-  }
+  return null
+}
 
+export const DigitalTwinScene = ({ windSpeed, windDirection, turbineCount, speedFactors, focusTurbineIndex }: Props) => {
   return (
     <>
       <color attach="background" args={['#0f1720']} />
-      <fog attach="fog" args={['#0f1720', 60, 180]} />
+      <fog attach="fog" args={['#0f1720', 50, 140]} />
 
-      <ambientLight intensity={0.8} />
-      <directionalLight position={[20, 30, 15]} intensity={1.2} />
-      <hemisphereLight args={['#b1d8ff', '#39424e', 0.4]} />
+      <ambientLight intensity={1.0} />
+      <directionalLight position={[20, 30, 15]} intensity={1.0} />
 
       <PerfMonitor />
 
       <WindFarm
         count={turbineCount}
         windSpeed={windSpeed}
-        updateRotations={updateRotations}
+        windDirection={windDirection}
+        speedFactors={speedFactors}
       />
       <OrbitControls makeDefault />
+      <CameraController focusIndex={focusTurbineIndex} />
     </>
   )
 }
