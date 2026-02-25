@@ -230,7 +230,7 @@
       "reusable": true,
       "width": 260,
       "fill": "$--bg-card",
-      "gap": 12,
+      "gap": 8,
       "padding": [
         10,
         14
@@ -312,6 +312,34 @@
                 "cap": "round",
                 "fill": "$--cyan-primary"
               }
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "oSPz4",
+          "name": "actionMenuBtn",
+          "width": 32,
+          "height": 32,
+          "fill": "$--bg-elevated",
+          "cornerRadius": "$--radius-sm",
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "#2A2A3066"
+          },
+          "justifyContent": "center",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "icon_font",
+              "id": "MV4qg",
+              "name": "actionMenuBtnIcon",
+              "width": 16,
+              "height": 16,
+              "iconFontName": "ellipsis-vertical",
+              "iconFontFamily": "lucide",
+              "fill": "$--cyan-primary"
             }
           ]
         }
@@ -611,8 +639,8 @@
     {
       "type": "frame",
       "id": "56NAG",
-      "x": 0,
-      "y": 880,
+      "x": 192,
+      "y": 789,
       "name": "Alchemist Industrial — Wind Farm Dashboard",
       "clip": true,
       "width": 1440,
@@ -2327,8 +2355,8 @@
     {
       "type": "frame",
       "id": "z6HNj",
-      "x": 1540,
-      "y": 880,
+      "x": 1958,
+      "y": 817,
       "name": "Alchemist Industrial — Mobile",
       "clip": true,
       "width": 390,
@@ -10742,6 +10770,2253 @@
                           "fontWeight": "500"
                         }
                       ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "h245b",
+      "x": 5200,
+      "y": 0,
+      "name": "mainContainer",
+      "width": 1200,
+      "fill": "$--bg-page",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "4yJUu",
+          "name": "header",
+          "width": "fill_container",
+          "fill": "$--bg-card",
+          "gap": 24,
+          "padding": 32,
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "nz83m",
+              "name": "headerInfo",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "JhCKG",
+                  "name": "titleFrame",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "p2ni5",
+                      "name": "turbineIcon",
+                      "width": 48,
+                      "height": 48,
+                      "iconFontName": "wind",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--cyan-primary"
+                    },
+                    {
+                      "type": "text",
+                      "id": "TTthd",
+                      "name": "titleText",
+                      "fill": "$--white",
+                      "content": "Wiatrak turbine_01",
+                      "fontFamily": "Oswald",
+                      "fontSize": 32,
+                      "fontWeight": "700"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "id": "oCGqQ",
+                  "name": "subtitleText",
+                  "fill": "$--gray-400",
+                  "content": "Lokalizacja: Farma wiatrowa Zachód · ID: TRB-2401-001",
+                  "fontFamily": "Inter",
+                  "fontSize": 14,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "id": "CKqeY",
+              "type": "ref",
+              "ref": "X7sYp",
+              "name": "statusBadge"
+            },
+            {
+              "type": "frame",
+              "id": "yGvMX",
+              "name": "backButton",
+              "fill": "$--bg-elevated",
+              "cornerRadius": "$--radius-sm",
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#2A2A3066"
+              },
+              "gap": 8,
+              "padding": [
+                8,
+                12
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "hWEHN",
+                  "name": "backIcon",
+                  "width": 18,
+                  "height": 18,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "$--cyan-primary"
+                },
+                {
+                  "type": "text",
+                  "id": "ULCSa",
+                  "name": "backText",
+                  "fill": "$--white",
+                  "content": "Powrót",
+                  "fontFamily": "Inter",
+                  "fontSize": 13,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "5bjei",
+          "name": "contentArea",
+          "width": "fill_container",
+          "gap": 32,
+          "padding": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "pozul",
+              "name": "leftColumn",
+              "width": 600,
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "1lGqd",
+                  "name": "metricsSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "VdRAf",
+                      "name": "metricsSectionTitle",
+                      "fill": "$--white",
+                      "content": "Metryki wydajności",
+                      "fontFamily": "Oswald",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "yVF0y",
+                      "name": "metricsGrid",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "id": "CT2lO",
+                          "type": "ref",
+                          "ref": "veZDE",
+                          "name": "metric1",
+                          "descendants": {
+                            "mtWdv": {
+                              "content": "// WIND_SPEED"
+                            },
+                            "nFB27": {
+                              "content": "12.4"
+                            },
+                            "MNac4": {
+                              "content": "m/s"
+                            }
+                          }
+                        },
+                        {
+                          "id": "xxD0m",
+                          "type": "ref",
+                          "ref": "veZDE",
+                          "name": "metric2",
+                          "descendants": {
+                            "mtWdv": {
+                              "content": "// POWER_OUTPUT"
+                            },
+                            "nFB27": {
+                              "content": "2.4"
+                            },
+                            "MNac4": {
+                              "content": "MW"
+                            }
+                          }
+                        },
+                        {
+                          "id": "wpXjt",
+                          "type": "ref",
+                          "ref": "veZDE",
+                          "name": "metric3",
+                          "descendants": {
+                            "mtWdv": {
+                              "content": "// EFFICIENCY"
+                            },
+                            "nFB27": {
+                              "content": "98.2"
+                            },
+                            "MNac4": {
+                              "content": "%"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "RT8b5",
+                  "name": "settingsSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "XDixH",
+                      "name": "settingsSectionTitle",
+                      "fill": "$--white",
+                      "content": "Ustawienia",
+                      "fontFamily": "Oswald",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "LR49L",
+                      "name": "settingsContent",
+                      "width": "fill_container",
+                      "fill": "$--bg-card",
+                      "cornerRadius": "$--radius-md",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "3NEPj",
+                          "name": "setting1",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "hPh3a",
+                              "name": "setting1Label",
+                              "fill": "$--gray-100",
+                              "content": "Maksymalna prędkość wiatru:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "vPPt9",
+                              "name": "setting1Value",
+                              "fill": "$--cyan-primary",
+                              "content": "25 m/s",
+                              "textAlign": "right",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "n307U",
+                          "name": "setting2",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "MYDQx",
+                              "name": "setting2Label",
+                              "fill": "$--gray-100",
+                              "content": "Minimalna prędkość wiatru:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "CmnPN",
+                              "name": "setting2Value",
+                              "fill": "$--cyan-primary",
+                              "content": "3.5 m/s",
+                              "textAlign": "right",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "bQ1Qe",
+                          "name": "setting3",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "CvkWG",
+                              "name": "setting3Label",
+                              "fill": "$--gray-100",
+                              "content": "Tryb operacyjny:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "txqd1",
+                              "name": "setting3Value",
+                              "fill": "$--green-online",
+                              "content": "Automatyczny",
+                              "textAlign": "right",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "R1rKs",
+              "name": "rightColumn",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 24,
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YosPz",
+                  "name": "technicalSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TLxDv",
+                      "name": "technicalTitle",
+                      "fill": "$--white",
+                      "content": "Dane techniczne",
+                      "fontFamily": "Oswald",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "2S1ae",
+                      "name": "technicalContent",
+                      "width": "fill_container",
+                      "fill": "$--bg-card",
+                      "cornerRadius": "$--radius-md",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "padding": 16,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "9Kal3",
+                          "name": "tech1",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "IGMzu",
+                              "name": "tech1Label",
+                              "fill": "$--gray-100",
+                              "content": "Moc nominalna:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "gUQoA",
+                              "name": "tech1Value",
+                              "fill": "$--cyan-primary",
+                              "content": "2.4 MW",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "cBIkf",
+                          "name": "tech2",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "RPhBg",
+                              "name": "tech2Label",
+                              "fill": "$--gray-100",
+                              "content": "Średnica wirnika:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "Tof8n",
+                              "name": "tech2Value",
+                              "fill": "$--cyan-primary",
+                              "content": "93 m",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "A1ueG",
+                          "name": "tech3",
+                          "width": "fill_container",
+                          "gap": 12,
+                          "justifyContent": "space_between",
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "j8h8Y",
+                              "name": "tech3Label",
+                              "fill": "$--gray-100",
+                              "content": "Wysokość wieży:",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "normal"
+                            },
+                            {
+                              "type": "text",
+                              "id": "L1d43",
+                              "name": "tech3Value",
+                              "fill": "$--cyan-primary",
+                              "content": "80 m",
+                              "fontFamily": "JetBrains Mono",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Uormw",
+                  "name": "partsSection",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 16,
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "TUwHG",
+                      "name": "partsTitle",
+                      "fill": "$--white",
+                      "content": "Stan części",
+                      "fontFamily": "Oswald",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "AZcyH",
+                      "name": "partsGrid",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "4Hn3U",
+                          "name": "part1",
+                          "width": "fill_container",
+                          "fill": "$--bg-card",
+                          "cornerRadius": "$--radius-md",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "#00D4FF33"
+                          },
+                          "layout": "vertical",
+                          "gap": 8,
+                          "padding": 12,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "uKZvG",
+                              "name": "part1Header",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "QdIBF",
+                                  "name": "part1Name",
+                                  "fill": "$--white",
+                                  "content": "Silnik główny",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ACkcd",
+                                  "name": "part1Status",
+                                  "fill": "$--green-online",
+                                  "cornerRadius": "$--radius-sm",
+                                  "gap": 6,
+                                  "padding": [
+                                    4,
+                                    8
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon_font",
+                                      "id": "jd2nJ",
+                                      "name": "part1StatusIcon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "iconFontName": "check",
+                                      "iconFontFamily": "lucide",
+                                      "fill": "$--black-text"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "SoSKm",
+                                      "name": "part1StatusText",
+                                      "fill": "$--black-text",
+                                      "content": "OK",
+                                      "fontFamily": "JetBrains Mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "T1sR1",
+                              "name": "part1Details",
+                              "fill": "$--gray-400",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Ostatnia kontrola: 2 dni temu · Żywotność: 2400 h / 5000 h",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "g3LGL",
+                          "name": "part2",
+                          "width": "fill_container",
+                          "fill": "$--bg-card",
+                          "cornerRadius": "$--radius-md",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "#FFAA0033"
+                          },
+                          "layout": "vertical",
+                          "gap": 8,
+                          "padding": 12,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "g8w4w",
+                              "name": "part2Header",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "bwoDp",
+                                  "name": "part2Name",
+                                  "fill": "$--white",
+                                  "content": "Łożyska",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "G4w3V",
+                                  "name": "part2Status",
+                                  "fill": "$--amber-warning",
+                                  "cornerRadius": "$--radius-sm",
+                                  "gap": 6,
+                                  "padding": [
+                                    4,
+                                    8
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon_font",
+                                      "id": "6Z6MP",
+                                      "name": "part2StatusIcon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "iconFontName": "triangle-alert",
+                                      "iconFontFamily": "lucide",
+                                      "fill": "$--black-text"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "HmVCn",
+                                      "name": "part2StatusText",
+                                      "fill": "$--black-text",
+                                      "content": "UWAGA",
+                                      "fontFamily": "JetBrains Mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "BPPke",
+                              "name": "part2Details",
+                              "fill": "$--gray-400",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Ostatnia kontrola: 15 dni temu · Żywotność: 3800 h / 4200 h",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "frame",
+                          "id": "xfvKy",
+                          "name": "part3",
+                          "width": "fill_container",
+                          "fill": "$--bg-card",
+                          "cornerRadius": "$--radius-md",
+                          "stroke": {
+                            "align": "inside",
+                            "thickness": 1,
+                            "fill": "#00D4FF33"
+                          },
+                          "layout": "vertical",
+                          "gap": 8,
+                          "padding": 12,
+                          "children": [
+                            {
+                              "type": "frame",
+                              "id": "AB0Im",
+                              "name": "part3Header",
+                              "width": "fill_container",
+                              "gap": 8,
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "text",
+                                  "id": "BYkMN",
+                                  "name": "part3Name",
+                                  "fill": "$--white",
+                                  "content": "Układ hydrauliczny",
+                                  "fontFamily": "Inter",
+                                  "fontSize": 13,
+                                  "fontWeight": "600"
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "mLH36",
+                                  "name": "part3Status",
+                                  "fill": "$--green-online",
+                                  "cornerRadius": "$--radius-sm",
+                                  "gap": 6,
+                                  "padding": [
+                                    4,
+                                    8
+                                  ],
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "icon_font",
+                                      "id": "yaame",
+                                      "name": "part3StatusIcon",
+                                      "width": 12,
+                                      "height": 12,
+                                      "iconFontName": "check",
+                                      "iconFontFamily": "lucide",
+                                      "fill": "$--black-text"
+                                    },
+                                    {
+                                      "type": "text",
+                                      "id": "1WXjJ",
+                                      "name": "part3StatusText",
+                                      "fill": "$--black-text",
+                                      "content": "OK",
+                                      "fontFamily": "JetBrains Mono",
+                                      "fontSize": 10,
+                                      "fontWeight": "600"
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "Ugm3S",
+                              "name": "part3Details",
+                              "fill": "$--gray-400",
+                              "textGrowth": "fixed-width",
+                              "width": "fill_container",
+                              "content": "Ostatnia kontrola: 5 dni temu · Żywotność: 1200 h / 6000 h",
+                              "fontFamily": "Inter",
+                              "fontSize": 11,
+                              "fontWeight": "normal"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "ehnBZ",
+      "x": 6460,
+      "y": 0,
+      "name": "mobileContainer",
+      "width": 400,
+      "fill": "$--bg-page",
+      "layout": "vertical",
+      "children": [
+        {
+          "type": "frame",
+          "id": "YIRPX",
+          "name": "mobileHeader",
+          "width": "fill_container",
+          "fill": "$--bg-card",
+          "gap": 16,
+          "padding": [
+            16,
+            20
+          ],
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "frame",
+              "id": "w5CvB",
+              "name": "backButton",
+              "width": 40,
+              "height": 40,
+              "fill": "$--bg-elevated",
+              "cornerRadius": "$--radius-sm",
+              "stroke": {
+                "align": "inside",
+                "thickness": 1,
+                "fill": "#2A2A3066"
+              },
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "8u4b0",
+                  "name": "backIcon",
+                  "width": 20,
+                  "height": 20,
+                  "iconFontName": "arrow-left",
+                  "iconFontFamily": "lucide",
+                  "fill": "$--cyan-primary"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "vZZsZ",
+              "name": "mobileHeaderInfo",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 4,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "oVEgR",
+                  "name": "mobileTitleText",
+                  "fill": "$--white",
+                  "content": "turbine_01",
+                  "fontFamily": "Oswald",
+                  "fontSize": 18,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "text",
+                  "id": "4kihb",
+                  "name": "mobileSubtitleText",
+                  "fill": "$--gray-400",
+                  "content": "Farm Zachód",
+                  "fontFamily": "Inter",
+                  "fontSize": 11,
+                  "fontWeight": "normal"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "e0TQ1",
+              "name": "mobileStatusBadge",
+              "fill": "$--green-online",
+              "cornerRadius": "$--radius-sm",
+              "gap": 6,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "8oeCt",
+                  "name": "mobileStatusIcon",
+                  "width": 10,
+                  "height": 10,
+                  "iconFontName": "circle-dot",
+                  "iconFontFamily": "lucide",
+                  "fill": "$--black-text"
+                },
+                {
+                  "type": "text",
+                  "id": "6wQgx",
+                  "name": "mobileStatusText",
+                  "fill": "$--black-text",
+                  "content": "Online",
+                  "fontFamily": "JetBrains Mono",
+                  "fontSize": 9,
+                  "fontWeight": "600"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "0qJ8m",
+          "name": "mobileScrollContent",
+          "width": "fill_container",
+          "layout": "vertical",
+          "gap": 20,
+          "padding": 16,
+          "children": [
+            {
+              "type": "frame",
+              "id": "ZDBfO",
+              "name": "metricsSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "Yg2eR",
+                  "name": "metricsSectionTitle",
+                  "fill": "$--white",
+                  "content": "Metryki wydajności",
+                  "fontFamily": "Oswald",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "E114W",
+                  "name": "metricsGridMobile",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "5790K",
+                      "name": "metricItem1",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "gap": 12,
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "PdecJ",
+                          "name": "metricIcon1",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "wind",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--cyan-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "QNtLM",
+                          "name": "metricLabel1",
+                          "fill": "$--gray-100",
+                          "content": "Prędkość wiatru",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "POGFB",
+                          "name": "metricValue1",
+                          "fill": "$--cyan-primary",
+                          "content": "12.4 m/s",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "DhnXw",
+                          "name": "metricValue1",
+                          "fill": "$--cyan-primary",
+                          "content": "12.4 m/s",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "H3bGR",
+                      "name": "metricItem2",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "gap": 12,
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "2sInw",
+                          "name": "metricIcon2",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "zap",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--cyan-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "hOZpC",
+                          "name": "metricLabel2",
+                          "fill": "$--gray-100",
+                          "content": "Moc wyjściowa",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Qa4wm",
+                          "name": "metricValue2",
+                          "fill": "$--cyan-primary",
+                          "content": "2.4 MW",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "hOOT8",
+                      "name": "metricItem3",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "gap": 12,
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "rWyPY",
+                          "name": "metricIcon3",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "activity",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--cyan-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "yXTaD",
+                          "name": "metricLabel3",
+                          "fill": "$--gray-100",
+                          "content": "Efektywność",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "X3wyu",
+                          "name": "metricValue3",
+                          "fill": "$--cyan-primary",
+                          "content": "98.2%",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "y67j5",
+                      "name": "metricItem2",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "gap": 12,
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "0X3BZ",
+                          "name": "metricIcon2",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "zap",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--cyan-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "c6L9e",
+                          "name": "metricLabel2",
+                          "fill": "$--gray-100",
+                          "content": "Moc wyjściowa",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kNMBv",
+                          "name": "metricValue2",
+                          "fill": "$--cyan-primary",
+                          "content": "2.4 MW",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "EL7rE",
+                      "name": "metricItem3",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "gap": 12,
+                      "padding": 12,
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon_font",
+                          "id": "DcGk8",
+                          "name": "metricIcon3",
+                          "width": 20,
+                          "height": 20,
+                          "iconFontName": "activity",
+                          "iconFontFamily": "lucide",
+                          "fill": "$--cyan-primary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "J1O3l",
+                          "name": "metricLabel3",
+                          "fill": "$--gray-100",
+                          "content": "Efektywność",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kBoxH",
+                          "name": "metricValue3",
+                          "fill": "$--cyan-primary",
+                          "content": "98.2%",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 13,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "W2qtX",
+              "name": "technicalSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "TNFzw",
+                  "name": "technicalSectionTitle",
+                  "fill": "$--white",
+                  "content": "Dane techniczne",
+                  "fontFamily": "Oswald",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "GTeqF",
+                  "name": "technicalItems",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "hfXv3",
+                      "name": "techItem1",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "hlacW",
+                          "name": "techLabel1",
+                          "fill": "$--gray-400",
+                          "content": "Moc nominalna",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Nbfj9",
+                          "name": "techValue1",
+                          "fill": "$--cyan-primary",
+                          "content": "2.4 MW",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "R6aki",
+                      "name": "techItem2",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "L5PVl",
+                          "name": "techLabel2",
+                          "fill": "$--gray-400",
+                          "content": "Średnica wirnika",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "6YEYq",
+                          "name": "techValue2",
+                          "fill": "$--cyan-primary",
+                          "content": "93 m",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "d6ZsP",
+                      "name": "techItem3",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "layout": "vertical",
+                      "gap": 6,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "U1l79",
+                          "name": "techLabel3",
+                          "fill": "$--gray-400",
+                          "content": "Wysokość wieży",
+                          "fontFamily": "Inter",
+                          "fontSize": 11,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "8dDc1",
+                          "name": "techValue3",
+                          "fill": "$--cyan-primary",
+                          "content": "80 m",
+                          "fontFamily": "JetBrains Mono",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "myX1B",
+              "name": "partsSection",
+              "width": "fill_container",
+              "layout": "vertical",
+              "gap": 12,
+              "children": [
+                {
+                  "type": "text",
+                  "id": "EaDqk",
+                  "name": "partsSectionTitle",
+                  "fill": "$--white",
+                  "content": "Stan części",
+                  "fontFamily": "Oswald",
+                  "fontSize": 16,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "ji5gk",
+                  "name": "partsItems",
+                  "width": "fill_container",
+                  "layout": "vertical",
+                  "gap": 10,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "yxUXJ",
+                      "name": "mobilePartItem1",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#00D4FF33"
+                      },
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "bSDSl",
+                          "name": "mobilePartHeader1",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "sbFVS",
+                              "name": "mobilePartName1",
+                              "fill": "$--white",
+                              "content": "Silnik główny",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "2i8es",
+                              "name": "mobilePartStatus1",
+                              "fill": "$--green-online",
+                              "cornerRadius": 4,
+                              "gap": 4,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "rGdzj",
+                                  "name": "mobilePartStatusIcon1",
+                                  "width": 10,
+                                  "height": 10,
+                                  "iconFontName": "check",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--black-text"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "x1Dfh",
+                                  "name": "mobilePartStatusText1",
+                                  "fill": "$--black-text",
+                                  "content": "OK",
+                                  "fontFamily": "JetBrains Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "GD55E",
+                          "name": "mobilePartDetails1",
+                          "fill": "$--gray-400",
+                          "content": "Żywotność: 2400 h / 5000 h",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "SjndL",
+                      "name": "mobilePartItem2",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#FFAA0033"
+                      },
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "EfafB",
+                          "name": "mobilePartHeader2",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "kHFEP",
+                              "name": "mobilePartName2",
+                              "fill": "$--white",
+                              "content": "Łożyska",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "bBeLl",
+                              "name": "mobilePartStatus2",
+                              "fill": "$--amber-warning",
+                              "cornerRadius": 4,
+                              "gap": 4,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "kzyRg",
+                                  "name": "mobilePartStatusIcon2",
+                                  "width": 10,
+                                  "height": 10,
+                                  "iconFontName": "triangle-alert",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--black-text"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "HKb7V",
+                                  "name": "mobilePartStatusText2",
+                                  "fill": "$--black-text",
+                                  "content": "UWAGA",
+                                  "fontFamily": "JetBrains Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "ApW29",
+                          "name": "mobilePartDetails2",
+                          "fill": "$--gray-400",
+                          "content": "Żywotność: 3800 h / 4200 h",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "P9joc",
+                      "name": "mobilePartItem3",
+                      "width": "fill_container",
+                      "fill": "$--bg-elevated",
+                      "cornerRadius": "$--radius-md",
+                      "stroke": {
+                        "align": "inside",
+                        "thickness": 1,
+                        "fill": "#00D4FF33"
+                      },
+                      "layout": "vertical",
+                      "gap": 8,
+                      "padding": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "P63iZ",
+                          "name": "mobilePartHeader3",
+                          "width": "fill_container",
+                          "gap": 8,
+                          "alignItems": "center",
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "DoU7T",
+                              "name": "mobilePartName3",
+                              "fill": "$--white",
+                              "content": "Układ hydrauliczny",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "l7paT",
+                              "name": "mobilePartStatus3",
+                              "fill": "$--green-online",
+                              "cornerRadius": 4,
+                              "gap": 4,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "9rE9w",
+                                  "name": "mobilePartStatusIcon3",
+                                  "width": 10,
+                                  "height": 10,
+                                  "iconFontName": "check",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--black-text"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "6tuT8",
+                                  "name": "mobilePartStatusText3",
+                                  "fill": "$--black-text",
+                                  "content": "OK",
+                                  "fontFamily": "JetBrains Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            },
+                            {
+                              "type": "text",
+                              "id": "0rrir",
+                              "name": "mobilePartName3",
+                              "fill": "$--white",
+                              "content": "Układ hydrauliczny",
+                              "fontFamily": "Inter",
+                              "fontSize": 13,
+                              "fontWeight": "600"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "NWidM",
+                              "name": "mobilePartStatus3",
+                              "fill": "$--green-online",
+                              "cornerRadius": 4,
+                              "gap": 4,
+                              "padding": [
+                                4,
+                                8
+                              ],
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon_font",
+                                  "id": "omO75",
+                                  "name": "mobilePartStatusIcon3",
+                                  "width": 10,
+                                  "height": 10,
+                                  "iconFontName": "check",
+                                  "iconFontFamily": "lucide",
+                                  "fill": "$--black-text"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "BGhii",
+                                  "name": "mobilePartStatusText3",
+                                  "fill": "$--black-text",
+                                  "content": "OK",
+                                  "fontFamily": "JetBrains Mono",
+                                  "fontSize": 9,
+                                  "fontWeight": "600"
+                                }
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "type": "text",
+                          "id": "jJwoF",
+                          "name": "mobilePartDetails3",
+                          "fill": "$--gray-400",
+                          "content": "Żywotność: 1200 h / 6000 h",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Wkm68",
+                          "name": "mobilePartDetails3",
+                          "fill": "$--gray-400",
+                          "content": "Żywotność: 1200 h / 6000 h",
+                          "fontFamily": "Inter",
+                          "fontSize": 10,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "rmIm5",
+              "name": "mobileBottomPadding",
+              "width": "fill_container",
+              "height": 16
+            },
+            {
+              "type": "frame",
+              "id": "CXfUx",
+              "name": "mobileBottomPadding",
+              "width": "fill_container",
+              "height": 16
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "aObAe",
+      "x": 953,
+      "y": -240,
+      "name": "actionMenuContainer",
+      "width": 1200,
+      "height": 800,
+      "fill": "#0A0A0B99",
+      "layout": "none",
+      "children": [
+        {
+          "type": "frame",
+          "id": "1LDJh",
+          "x": 311,
+          "y": 64,
+          "name": "actionMenuModal",
+          "width": 500,
+          "fill": "$--bg-card",
+          "cornerRadius": "$--radius-lg",
+          "layout": "vertical",
+          "children": [
+            {
+              "type": "frame",
+              "id": "GkztG",
+              "name": "actionMenuHeader",
+              "width": "fill_container",
+              "gap": 16,
+              "padding": [
+                20,
+                24
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "1B9pW",
+                  "name": "actionMenuTitle",
+                  "fill": "$--white",
+                  "content": "Akcje dla turbine_01",
+                  "fontFamily": "Oswald",
+                  "fontSize": 20,
+                  "fontWeight": "700"
+                },
+                {
+                  "type": "frame",
+                  "id": "Uh1m9",
+                  "name": "actionMenuCloseBtn",
+                  "width": 40,
+                  "height": 40,
+                  "fill": "$--bg-elevated",
+                  "cornerRadius": "$--radius-sm",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#2A2A3066"
+                  },
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "SbYe3",
+                      "name": "actionMenuCloseIcon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "x",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-400"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "beGLO",
+              "name": "actionMenuContent",
+              "width": "fill_container",
+              "layout": "vertical",
+              "padding": [
+                0,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "wXvQi",
+                  "name": "actionItem1",
+                  "width": "fill_container",
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "cap": "square",
+                    "fill": "#2A2A3066"
+                  },
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "4Fage",
+                      "name": "actionItem1Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "eye",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--cyan-primary"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "N2VwW",
+                      "name": "actionItem1Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PA5Om",
+                          "name": "actionItem1Title",
+                          "fill": "$--white",
+                          "content": "Wyświetl szczegóły",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "vvphN",
+                          "name": "actionItem1Desc",
+                          "fill": "$--gray-400",
+                          "content": "Przejdź do pełnych informacji o wiatraku",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "1Iv2a",
+                      "name": "actionItem1Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "bckcF",
+                  "name": "actionItem2",
+                  "width": "fill_container",
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "cap": "square",
+                    "fill": "#2A2A3066"
+                  },
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "mvTiL",
+                      "name": "actionItem2Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "sliders-horizontal",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--cyan-primary"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "6Evsr",
+                      "name": "actionItem2Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "OLN0W",
+                          "name": "actionItem2Title",
+                          "fill": "$--white",
+                          "content": "Zmień ustawienia",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "kgAU3",
+                          "name": "actionItem2Desc",
+                          "fill": "$--gray-400",
+                          "content": "Dostosuj parametry pracy turbiny",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "PV1v6",
+                      "name": "actionItem2Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "VQ64o",
+                  "name": "actionItem3",
+                  "width": "fill_container",
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "cap": "square",
+                    "fill": "#2A2A3066"
+                  },
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "BIG0j",
+                      "name": "actionItem3Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "zap",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--cyan-primary"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "mUS6Y",
+                      "name": "actionItem3Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "8Ny21",
+                          "name": "actionItem3Title",
+                          "fill": "$--white",
+                          "content": "Zarządzaj zasilaniem",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "xdjzu",
+                          "name": "actionItem3Desc",
+                          "fill": "$--gray-400",
+                          "content": "Włącz, wyłącz lub wznów pracę",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "bEOxR",
+                      "name": "actionItem3Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "Purc7",
+                  "name": "actionItem4",
+                  "width": "fill_container",
+                  "stroke": {
+                    "align": "center",
+                    "thickness": 1,
+                    "cap": "square",
+                    "fill": "#2A2A3066"
+                  },
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "caA6D",
+                      "name": "actionItem4Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "wrench",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--cyan-primary"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "tmHCI",
+                      "name": "actionItem4Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "7VVuP",
+                          "name": "actionItem4Title",
+                          "fill": "$--white",
+                          "content": "Diagnostyka i naprawa",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "qr8Ge",
+                          "name": "actionItem4Desc",
+                          "fill": "$--gray-400",
+                          "content": "Sprawdź stan części i zaplanuj serwis",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        },
+                        {
+                          "type": "text",
+                          "id": "nnYSM",
+                          "name": "actionItem4Title",
+                          "fill": "$--white",
+                          "content": "Diagnostyka i naprawa",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "BnMJr",
+                          "name": "actionItem4Desc",
+                          "fill": "$--gray-400",
+                          "content": "Sprawdź stan części i zaplanuj serwis",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "sxWhD",
+                      "name": "actionItem4Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "g4jnx",
+                      "name": "actionItem4Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "OuDZ8",
+                  "name": "actionItem5",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "iM0NM",
+                      "name": "actionItem5Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "alert-triangle",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--red-critical"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "JU6Vw",
+                      "name": "actionItem5Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "kzIPi",
+                          "name": "actionItem5Title",
+                          "fill": "$--red-critical",
+                          "content": "Wyłącz turbinę",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "Vi7ci",
+                          "name": "actionItem5Desc",
+                          "fill": "$--gray-400",
+                          "content": "Bezpieczne wyłączenie systemu",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "k7sQz",
+                      "name": "actionItem5Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "uT8dR",
+                  "name": "actionItem5",
+                  "width": "fill_container",
+                  "gap": 16,
+                  "padding": [
+                    16,
+                    0
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "icon_font",
+                      "id": "NysVb",
+                      "name": "actionItem5Icon",
+                      "width": 20,
+                      "height": 20,
+                      "iconFontName": "trash-2",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--red-critical"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "471la",
+                      "name": "actionItem5Content",
+                      "width": "fill_container",
+                      "layout": "vertical",
+                      "gap": 2,
+                      "children": [
+                        {
+                          "type": "text",
+                          "id": "PaTfk",
+                          "name": "actionItem5Title",
+                          "fill": "$--red-critical",
+                          "content": "Wyłącz turbinę",
+                          "fontFamily": "Inter",
+                          "fontSize": 14,
+                          "fontWeight": "600"
+                        },
+                        {
+                          "type": "text",
+                          "id": "jrvl7",
+                          "name": "actionItem5Desc",
+                          "fill": "$--gray-400",
+                          "content": "Bezpieczne wyłączenie systemu",
+                          "fontFamily": "Inter",
+                          "fontSize": 12,
+                          "fontWeight": "normal"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "icon_font",
+                      "id": "ksOzw",
+                      "name": "actionItem5Arrow",
+                      "width": 18,
+                      "height": 18,
+                      "iconFontName": "arrow-right",
+                      "iconFontFamily": "lucide",
+                      "fill": "$--gray-600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "tn1t4",
+              "name": "actionMenuFooter",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "YJYVQ",
+                  "name": "cancelBtn",
+                  "height": 40,
+                  "fill": "$--bg-elevated",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#2A2A3066"
+                  },
+                  "padding": [
+                    0,
+                    24
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "AfuQu",
+                      "name": "cancelBtnText",
+                      "fill": "$--white",
+                      "content": "Anuluj",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "KraLX",
+              "name": "actionMenuFooter",
+              "width": "fill_container",
+              "gap": 12,
+              "padding": [
+                20,
+                24
+              ],
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "cRlCB",
+                  "name": "cancelBtn",
+                  "height": 40,
+                  "fill": "$--bg-elevated",
+                  "cornerRadius": "$--radius-md",
+                  "stroke": {
+                    "align": "inside",
+                    "thickness": 1,
+                    "fill": "#2A2A3066"
+                  },
+                  "padding": [
+                    0,
+                    24
+                  ],
+                  "justifyContent": "center",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "2bkHJ",
+                      "name": "cancelBtnText",
+                      "fill": "$--white",
+                      "content": "Anuluj",
+                      "fontFamily": "Inter",
+                      "fontSize": 14,
+                      "fontWeight": "600"
                     }
                   ]
                 }

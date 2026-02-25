@@ -1,9 +1,10 @@
 import { Canvas } from '@react-three/fiber'
 import { Suspense, useState, useEffect, useRef, useCallback, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import {
   Wind, Bell, AlertTriangle, MessageCircle,
-  ChevronRight, BarChart3, ChevronDown
+  ChevronRight, BarChart3, ChevronDown,
+  X, Eye, SlidersHorizontal, Zap, Wrench, Trash2
 } from 'lucide-react'
 import { DigitalTwinScene } from '../components/DigitalTwinScene'
 import { perfStore, type PerfStats } from '../components/PerfMonitor'
@@ -53,11 +54,13 @@ const metricBarPercent = (value: number, min: number, max: number) =>
 
 export const Dashboard = () => {
   const farm = useWindFarmData()
+  const navigate = useNavigate()
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())
   const [focusTurbineIndex, setFocusTurbineIndex] = useState<number | null>(null)
-  const [perfExpanded, setPerfExpanded] = useState(true)
+  const [contextMenuTurbine, setContextMenuTurbine] = useState<{ id: number; name: string } | null>(null)
+  const [perfExpanded, setPerfExpanded] = useState(false)
   const perf = usePerfStats()
-  const perfDrag = useDraggable(232, 72)
+  const perfDrag = useDraggable(16, 604)
 
   const now = new Date()
   const timeStr = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
@@ -77,6 +80,19 @@ export const Dashboard = () => {
     () => (farm?.alerts.filter((a) => !dismissedAlerts.has(a.id)) ?? []).slice(-5),
     [farm?.alerts, dismissedAlerts]
   )
+
+  useEffect(() => {
+    if (!contextMenuTurbine) return
+
+    const handleEsc = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setContextMenuTurbine(null)
+      }
+    }
+
+    window.addEventListener('keydown', handleEsc)
+    return () => window.removeEventListener('keydown', handleEsc)
+  }, [contextMenuTurbine])
 
   if (!farm) {
     return (
@@ -276,6 +292,11 @@ export const Dashboard = () => {
               key={t.id}
               className={`turbine-row ${focusTurbineIndex === t.id - 1 ? 'turbine-row--active' : ''}`}
               onClick={() => setFocusTurbineIndex(t.id - 1)}
+              onContextMenu={(event) => {
+                event.preventDefault()
+                setFocusTurbineIndex(t.id - 1)
+                setContextMenuTurbine({ id: t.id, name: t.name })
+              }}
               style={{ cursor: 'pointer' }}
             >
               <div className="turbine-row__icon"><Wind size={16} /></div>
@@ -361,6 +382,97 @@ export const Dashboard = () => {
       <button className="dashboard__ai-bubble">
         <MessageCircle size={24} />
       </button>
+
+      {contextMenuTurbine && (
+        <div className="dashboard-context-menu__overlay" onClick={() => setContextMenuTurbine(null)}>
+          <div
+            className="dashboard-context-menu"
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Actions for ${contextMenuTurbine.name}`}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="dashboard-context-menu__header">
+              <h3 className="dashboard-context-menu__title">Actions for {contextMenuTurbine.name}</h3>
+              <button
+                className="dashboard-context-menu__close"
+                onClick={() => setContextMenuTurbine(null)}
+                aria-label="Close actions menu"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            <div className="dashboard-context-menu__items">
+              <button
+                className="dashboard-context-menu__item"
+                onClick={() => {
+                  navigate(`/dashboard/turbine/${contextMenuTurbine.id}`)
+                  setContextMenuTurbine(null)
+                }}
+              >
+                <Eye size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Detailed View</span>
+                  <span className="dashboard-context-menu__item-desc">View turbine telemetry details</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+
+              <button className="dashboard-context-menu__item">
+                <SlidersHorizontal size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Change Settings</span>
+                  <span className="dashboard-context-menu__item-desc">Update turbine operating parameters</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+
+              <button className="dashboard-context-menu__item">
+                <Zap size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Toggle Power</span>
+                  <span className="dashboard-context-menu__item-desc">Turn the unit on or off</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+
+              <button className="dashboard-context-menu__item">
+                <Wrench size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Diagnostics and Repair</span>
+                  <span className="dashboard-context-menu__item-desc">Run full service diagnostics</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+
+              <button className="dashboard-context-menu__item dashboard-context-menu__item--danger">
+                <AlertTriangle size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Send Technical Alert</span>
+                  <span className="dashboard-context-menu__item-desc">Notify the operations team</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+
+              <button className="dashboard-context-menu__item dashboard-context-menu__item--danger">
+                <Trash2 size={18} className="dashboard-context-menu__item-icon" />
+                <span className="dashboard-context-menu__item-copy">
+                  <span className="dashboard-context-menu__item-label">Shutdown Turbine</span>
+                  <span className="dashboard-context-menu__item-desc">Immediate operational stop</span>
+                </span>
+                <ChevronRight size={16} className="dashboard-context-menu__item-arrow" />
+              </button>
+            </div>
+
+            <div className="dashboard-context-menu__footer">
+              <button className="dashboard-context-menu__cancel" onClick={() => setContextMenuTurbine(null)}>
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

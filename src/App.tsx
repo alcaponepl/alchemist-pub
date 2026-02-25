@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { LandingPage } from './pages/LandingPage'
 import { Dashboard } from './pages/Dashboard'
+import { TurbineDetails } from './pages/TurbineDetails'
 import { Login } from './pages/Login'
 import { Register } from './pages/Register'
 import { Settings } from './pages/Settings'
@@ -10,6 +11,7 @@ const App = () => (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/dashboard/turbine/:turbineId" element={<TurbineDetails />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/settings" element={<Settings />} />
