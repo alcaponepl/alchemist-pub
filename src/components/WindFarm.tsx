@@ -14,8 +14,6 @@ type Props = {
   terrain: 'sea' | 'land'
 }
 
-const COLS = 10
-const SPACING = 12
 const DEG2RAD = Math.PI / 180
 const YAW_LERP_SPEED = 1.2
 const DEMO_LAND_WIDTH = 64

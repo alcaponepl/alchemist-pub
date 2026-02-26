@@ -11,6 +11,7 @@ node_modules
 dist
 dist-ssr
 *.local
+.firebaserc
 src-rust/pkg
 
 # Editor directories and files
