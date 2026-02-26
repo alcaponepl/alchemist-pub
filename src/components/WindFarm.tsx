@@ -1,6 +1,8 @@
-import { useFrame } from '@react-three/fiber'
-import { useCallback, useMemo, useRef } from 'react'
-import type { Group, Mesh } from 'three'
+import { useFrame, useLoader, useThree } from '@react-three/fiber'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import type { Group, ShaderMaterial } from 'three'
+import { PlaneGeometry, RepeatWrapping, TextureLoader, Vector3 } from 'three'
+import { Water as WaterObject } from 'three/examples/jsm/objects/Water.js'
 import { Windmill } from './Windmill'
 import { GrassPatch, getDemoLandGroundYPosition } from './demoLand/GrassPatch'
 
@@ -20,6 +22,54 @@ const DEMO_LAND_WIDTH = 64
 const LAND_MIN_DISTANCE = 11.5
 const LAND_MIN_DISTANCE_FLOOR = 9.5
 const LAND_MARGIN = 5.5
+const SEA_LEVEL = 0
+const SEA_HALF = 70
+const SEA_MIN_DISTANCE = 16
+const SEA_MIN_DISTANCE_FLOOR = 12.5
+
+function SeaWater() {
+  const waterNormals = useLoader(TextureLoader, 'https://threejs.org/examples/textures/waternormals.jpg')
+  const { scene } = useThree()
+
+  const water = useMemo(() => {
+    waterNormals.wrapS = RepeatWrapping
+    waterNormals.wrapT = RepeatWrapping
+
+    const geometry = new PlaneGeometry(1400, 1400)
+    const sea = new WaterObject(geometry, {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals,
+      sunDirection: new Vector3(0, 1, 0),
+      sunColor: 0xffffff,
+      waterColor: 0x0a3552,
+      distortionScale: 3.7,
+      fog: Boolean(scene.fog),
+    })
+    sea.rotation.x = -Math.PI / 2
+    sea.position.y = SEA_LEVEL
+    return sea
+  }, [scene.fog, waterNormals])
+
+  useEffect(
+    () => () => {
+      water.geometry.dispose()
+      ;(water.material as ShaderMaterial).dispose()
+    },
+    [water],
+  )
+
+  useFrame((_, delta) => {
+    const uniforms = (water.material as ShaderMaterial).uniforms as
+      | { time?: { value: number } }
+      | undefined
+    if (uniforms?.time) {
+      uniforms.time.value += delta * 0.85
+    }
+  })
+
+  return <primitive object={water} />
+}
 
 function mulberry32(seed: number) {
   let t = seed
@@ -94,15 +144,73 @@ function getLandPositions(count: number): [number, number, number][] {
   return positions
 }
 
+function getSeaPositions(count: number): [number, number, number][] {
+  const rand = mulberry32(7331 + count * 29)
+  const positions: [number, number, number][] = []
+  let minDistance = SEA_MIN_DISTANCE
+  const maxAttemptsPerPass = Math.max(300, count * 220)
+
+  while (positions.length < count && minDistance >= SEA_MIN_DISTANCE_FLOOR) {
+    let attempts = 0
+    while (positions.length < count && attempts < maxAttemptsPerPass) {
+      attempts += 1
+      const x = (rand() * 2 - 1) * SEA_HALF
+      const z = (rand() * 2 - 1) * SEA_HALF
+
+      let tooClose = false
+      for (let i = 0; i < positions.length; i += 1) {
+        const [px, , pz] = positions[i]
+        const dx = x - px
+        const dz = z - pz
+        if (dx * dx + dz * dz < minDistance * minDistance) {
+          tooClose = true
+          break
+        }
+      }
+      if (tooClose) continue
+
+      // Slightly submerge tower bases so turbines clearly stand "in water".
+      positions.push([x, SEA_LEVEL - 0.35, z])
+    }
+    minDistance -= 0.7
+  }
+
+  if (positions.length < count) {
+    const ringStep = SEA_MIN_DISTANCE_FLOOR * 1.06
+    let ring = 0
+    while (positions.length < count && ring < 20) {
+      ring += 1
+      const radius = Math.min(SEA_HALF, ring * ringStep)
+      const circumference = Math.max(1, Math.floor((2 * Math.PI * radius) / SEA_MIN_DISTANCE_FLOOR))
+      for (let i = 0; i < circumference && positions.length < count; i += 1) {
+        const a = (i / circumference) * Math.PI * 2
+        const x = Math.cos(a) * radius
+        const z = Math.sin(a) * radius
+        let tooClose = false
+        for (let j = 0; j < positions.length; j += 1) {
+          const [px, , pz] = positions[j]
+          const dx = x - px
+          const dz = z - pz
+          if (dx * dx + dz * dz < SEA_MIN_DISTANCE_FLOOR * SEA_MIN_DISTANCE_FLOOR) {
+            tooClose = true
+            break
+          }
+        }
+        if (!tooClose) {
+          positions.push([x, SEA_LEVEL - 0.35, z])
+        }
+      }
+    }
+  }
+
+  return positions
+}
+
 function getTurbinePositions(count: number, terrain: 'sea' | 'land'): [number, number, number][] {
   if (terrain === 'land') {
     return getLandPositions(count)
   }
-  return Array.from({ length: count }, (_, i) => {
-    const col = i % COLS
-    const row = Math.floor(i / COLS)
-    return [(col - (COLS - 1) / 2) * SPACING, 0, (row - 2) * SPACING]
-  })
+  return getSeaPositions(count)
 }
 
 export function getTurbinePosition(
@@ -130,8 +238,6 @@ export const WindFarm = ({ count = 10, windSpeed, windDirection, speedFactors, t
   )
   const bladesMap = useRef<Map<number, Group>>(new Map())
   const turbineMap = useRef<Map<number, Group>>(new Map())
-  const seaSurfaceA = useRef<Mesh>(null)
-  const seaSurfaceB = useRef<Mesh>(null)
 
   const setBladesRef = useCallback((index: number, group: Group | null) => {
     if (group) bladesMap.current.set(index, group)
@@ -183,13 +289,8 @@ export const WindFarm = ({ count = 10, windSpeed, windDirection, speedFactors, t
     }
 
     if (terrain === 'sea') {
-      const t = sceneTime.current
-      if (seaSurfaceA.current) {
-        seaSurfaceA.current.position.y = -0.035 + Math.sin(t * 0.75) * 0.008
-      }
-      if (seaSurfaceB.current) {
-        seaSurfaceB.current.position.y = -0.014 + Math.cos(t * 0.62) * 0.006
-      }
+      // Keep ref for future sea-specific animation hooks if needed.
+      void sceneTime.current
     }
   })
 
@@ -197,31 +298,10 @@ export const WindFarm = ({ count = 10, windSpeed, windDirection, speedFactors, t
     <group>
       {terrain === 'sea' ? (
         <>
-          <mesh receiveShadow position={[0, -0.2, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-            <planeGeometry args={[260, 260]} />
-            <meshStandardMaterial color="#0a2538" roughness={0.92} metalness={0.06} />
-          </mesh>
-          <mesh ref={seaSurfaceA} position={[0, -0.035, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={1}>
-            <planeGeometry args={[260, 260, 24, 24]} />
-            <meshStandardMaterial
-              color="#1f5d88"
-              transparent
-              opacity={0.82}
-              roughness={0.22}
-              metalness={0.12}
-              depthWrite={false}
-            />
-          </mesh>
-          <mesh ref={seaSurfaceB} position={[0, -0.014, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={2}>
-            <planeGeometry args={[220, 220, 14, 14]} />
-            <meshStandardMaterial
-              color="#5ea6cf"
-              transparent
-              opacity={0.18}
-              roughness={0.3}
-              metalness={0.08}
-              depthWrite={false}
-            />
+          <SeaWater />
+          <mesh receiveShadow position={[0, SEA_LEVEL - 2.6, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+            <planeGeometry args={[1400, 1400]} />
+            <meshStandardMaterial color="#082338" roughness={0.9} metalness={0.02} />
           </mesh>
         </>
       ) : (

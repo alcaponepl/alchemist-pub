@@ -72,7 +72,9 @@ export const DigitalTwinScene = ({
       <hemisphereLight
         args={[isSea ? '#8fc3ff' : '#dff3ff', isSea ? '#1a2a3b' : '#6ea870', isSea ? 0.52 : 0.75]}
       />
-      {!isSea && (
+      {isSea ? (
+        <Sky scale={1000} sunPosition={[500, 150, -1000]} turbidity={0.1} />
+      ) : (
         <Sky
           distance={450000}
           sunPosition={[100, 28, 60]}
