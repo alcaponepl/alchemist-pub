@@ -11,7 +11,17 @@ import {
 } from 'three'
 import { fragmentSource, getVertexSource } from './grassShaders'
 
-const simplexNoise2D = createNoise2D()
+function mulberry32(seed: number) {
+  let t = seed >>> 0
+  return () => {
+    t += 0x6d2b79f5
+    let r = Math.imul(t ^ (t >>> 15), 1 | t)
+    r ^= r + Math.imul(r ^ (r >>> 7), 61 | r)
+    return ((r ^ (r >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+const simplexNoise2D = createNoise2D(mulberry32(1337))
 
 type GrassBladeOptions = {
   width: number
@@ -75,18 +85,19 @@ function getAttributeData(instances: number, width: number): AttributeData {
   const cellSize = Math.sqrt((Math.PI * radius * radius) / instances)
   const gridHalf = Math.ceil(radius / cellSize)
   const jitter = cellSize * 0.45
+  const rand = mulberry32((instances * 1009) ^ ((Math.round(width * 100) * 9176) >>> 0) ^ 0x9e3779b9)
 
   let count = 0
   for (let row = -gridHalf; row <= gridHalf; row++) {
     for (let col = -gridHalf; col <= gridHalf; col++) {
-      const cx = col * cellSize + (Math.random() - 0.5) * 2 * jitter
-      const cz = row * cellSize + (Math.random() - 0.5) * 2 * jitter
+      const cx = col * cellSize + (rand() - 0.5) * 2 * jitter
+      const cz = row * cellSize + (rand() - 0.5) * 2 * jitter
       if (cx * cx + cz * cz > radius * radius) continue
 
       const offsetY = getDemoLandGroundYPosition(cx, cz, width)
       offsets.push(cx, offsetY, cz)
 
-      let angle = Math.PI - Math.random() * (2 * Math.PI)
+      let angle = Math.PI - rand() * (2 * Math.PI)
       halfRootAngleSin.push(Math.sin(0.5 * angle))
       halfRootAngleCos.push(Math.cos(0.5 * angle))
 
@@ -97,7 +108,7 @@ function getAttributeData(instances: number, width: number): AttributeData {
       let w = Math.cos(angle / 2)
       q0.set(x, y, z, w).normalize()
 
-      angle = Math.random() * (tiltMax - tiltMin) + tiltMin
+      angle = rand() * (tiltMax - tiltMin) + tiltMin
       rotationAxis = new Vector3(1, 0, 0)
       x = rotationAxis.x * Math.sin(angle / 2)
       y = rotationAxis.y * Math.sin(angle / 2)
@@ -106,7 +117,7 @@ function getAttributeData(instances: number, width: number): AttributeData {
       q1.set(x, y, z, w).normalize()
       const qAfterX = multiplyQuaternions(q0, q1)
 
-      angle = Math.random() * (tiltMax - tiltMin) + tiltMin
+      angle = rand() * (tiltMax - tiltMin) + tiltMin
       rotationAxis = new Vector3(0, 0, 1)
       x = rotationAxis.x * Math.sin(angle / 2)
       y = rotationAxis.y * Math.sin(angle / 2)
@@ -116,7 +127,8 @@ function getAttributeData(instances: number, width: number): AttributeData {
       const qFinal = multiplyQuaternions(qAfterX, q1)
 
       orientations.push(qFinal.x, qFinal.y, qFinal.z, qFinal.w)
-      stretches.push(count < instances / 3 ? Math.random() * 1.8 : Math.random())
+      // Keep a floor on blade height to avoid local "bald patches".
+      stretches.push(count < instances / 3 ? 0.65 + rand() * 1.35 : 0.45 + rand() * 0.9)
       count++
     }
   }
@@ -152,18 +164,19 @@ export const GrassPatch = ({
     geometry.rotateX(-Math.PI / 2)
 
     const positions = geometry.attributes.position
-    const sampleStep = 0.6
+    const sampleStep = 0.45
     for (let i = 0; i < positions.count; i += 1) {
       const x = positions.getX(i)
       const z = positions.getZ(i)
       let minY = getDemoLandGroundYPosition(x, z, width)
-      for (let dx = -1; dx <= 1; dx++) {
-        for (let dz = -1; dz <= 1; dz++) {
+      for (let dx = -2; dx <= 2; dx++) {
+        for (let dz = -2; dz <= 2; dz++) {
           const sy = getDemoLandGroundYPosition(x + dx * sampleStep, z + dz * sampleStep, width)
           if (sy < minY) minY = sy
         }
       }
-      positions.setY(i, minY - 0.12)
+      // Keep ground under the grass canopy in every local neighborhood.
+      positions.setY(i, minY - 0.16)
     }
     positions.needsUpdate = true
     geometry.computeVertexNormals()
@@ -219,7 +232,12 @@ export const GrassPatch = ({
       </mesh>
 
       <mesh geometry={groundGeo} renderOrder={-1} receiveShadow>
-        <meshStandardMaterial color="#1a6e10" roughness={1} metalness={0} side={DoubleSide} />
+        <meshStandardMaterial
+          color="#1a6e10"
+          roughness={1}
+          metalness={0}
+          side={DoubleSide}
+        />
       </mesh>
     </group>
   )

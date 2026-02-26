@@ -19,6 +19,7 @@ const SPACING = 12
 const DEG2RAD = Math.PI / 180
 const YAW_LERP_SPEED = 1.2
 const DEMO_LAND_WIDTH = 64
+const LAND_GRASS_INSTANCES = 140000
 const LAND_MIN_DISTANCE = 11.5
 const LAND_MIN_DISTANCE_FLOOR = 9.5
 const LAND_MARGIN = 5.5
@@ -306,7 +307,7 @@ export const WindFarm = ({ count = 10, windSpeed, windDirection, speedFactors, t
         </>
       ) : (
         <>
-          <GrassPatch width={DEMO_LAND_WIDTH} instances={140000} />
+          <GrassPatch width={DEMO_LAND_WIDTH} instances={LAND_GRASS_INSTANCES} />
         </>
       )}
 
