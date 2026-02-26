@@ -1,4 +1,4 @@
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, Sky } from '@react-three/drei'
 import { useFrame, useThree } from '@react-three/fiber'
 import { useEffect, useRef } from 'react'
 import { Vector3 } from 'three'
@@ -11,9 +11,18 @@ type Props = {
   turbineCount: number
   speedFactors: number[]
   focusTurbineIndex: number | null
+  sceneMode: 'sea' | 'land'
 }
 
-function CameraController({ focusIndex }: { focusIndex: number | null }) {
+function CameraController({
+  focusIndex,
+  sceneMode,
+  turbineCount,
+}: {
+  focusIndex: number | null
+  sceneMode: 'sea' | 'land'
+  turbineCount: number
+}) {
   const { camera, controls } = useThree()
   const targetPos = useRef(new Vector3())
   const cameraPos = useRef(new Vector3())
@@ -24,11 +33,11 @@ function CameraController({ focusIndex }: { focusIndex: number | null }) {
     if (focusIndex === null || focusIndex === prevIndex.current) return
     prevIndex.current = focusIndex
 
-    const [tx, , tz] = getTurbinePosition(focusIndex)
+    const [tx, , tz] = getTurbinePosition(focusIndex, sceneMode, turbineCount)
     targetPos.current.set(tx, 8, tz)
     cameraPos.current.set(tx + 18, 14, tz + 18)
     animating.current = true
-  }, [focusIndex])
+  }, [focusIndex, sceneMode, turbineCount])
 
   useFrame(() => {
     if (!animating.current || !controls) return
@@ -45,14 +54,37 @@ function CameraController({ focusIndex }: { focusIndex: number | null }) {
   return null
 }
 
-export const DigitalTwinScene = ({ windSpeed, windDirection, turbineCount, speedFactors, focusTurbineIndex }: Props) => {
+export const DigitalTwinScene = ({
+  windSpeed,
+  windDirection,
+  turbineCount,
+  speedFactors,
+  focusTurbineIndex,
+  sceneMode,
+}: Props) => {
+  const isSea = sceneMode === 'sea'
+
   return (
     <>
-      <color attach="background" args={['#0f1720']} />
-      <fog attach="fog" args={['#0f1720', 50, 140]} />
+      <color attach="background" args={[isSea ? '#0c1a2a' : '#6dbbff']} />
+      <fog attach="fog" args={[isSea ? '#10263a' : '#73c0ff', 80, 300]} />
 
-      <ambientLight intensity={1.0} />
-      <directionalLight position={[20, 30, 15]} intensity={1.0} />
+      <hemisphereLight
+        args={[isSea ? '#8fc3ff' : '#dff3ff', isSea ? '#1a2a3b' : '#6ea870', isSea ? 0.52 : 0.75]}
+      />
+      {!isSea && (
+        <Sky
+          distance={450000}
+          sunPosition={[100, 28, 60]}
+          turbidity={2.2}
+          rayleigh={2.1}
+          mieCoefficient={0.001}
+          mieDirectionalG={0.68}
+        />
+      )}
+      <ambientLight intensity={isSea ? 0.7 : 0.42} />
+      <directionalLight position={isSea ? [16, 28, 18] : [10, 18, 10]} intensity={isSea ? 1.0 : 0.95} />
+      {!isSea && <directionalLight position={[-20, 18, -14]} intensity={0.16} color="#b7e38f" />}
 
       <PerfMonitor />
 
@@ -61,9 +93,14 @@ export const DigitalTwinScene = ({ windSpeed, windDirection, turbineCount, speed
         windSpeed={windSpeed}
         windDirection={windDirection}
         speedFactors={speedFactors}
+        terrain={sceneMode}
       />
-      <OrbitControls makeDefault />
-      <CameraController focusIndex={focusTurbineIndex} />
+      <OrbitControls
+        makeDefault
+        minPolarAngle={0.15}
+        maxPolarAngle={sceneMode === 'land' ? Math.PI * 0.48 : Math.PI * 0.495}
+      />
+      <CameraController focusIndex={focusTurbineIndex} sceneMode={sceneMode} turbineCount={turbineCount} />
     </>
   )
 }

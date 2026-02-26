@@ -4,11 +4,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import {
   Wind, Bell, AlertTriangle, MessageCircle,
   ChevronRight, BarChart3, ChevronDown,
-  X, Eye, SlidersHorizontal, Zap, Wrench, Trash2
+  X, Eye, SlidersHorizontal, Zap, Wrench, Trash2,
+  Waves, Trees
 } from 'lucide-react'
 import { DigitalTwinScene } from '../components/DigitalTwinScene'
 import { perfStore, type PerfStats } from '../components/PerfMonitor'
 import { useWindFarmData } from '../hooks/useWindFarmData'
+import type { Alert, TurbineData, TurbineStatus, WindFarmSnapshot } from '../types/windFarm'
 
 const usePerfStats = () => {
   const [stats, setStats] = useState<PerfStats>(perfStore.stats)
@@ -52,9 +54,127 @@ const useDraggable = (initialX: number, initialY: number) => {
 const metricBarPercent = (value: number, min: number, max: number) =>
   Math.round(((value - min) / (max - min)) * 100)
 
+const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value))
+
+const deriveStatus = (power: number, efficiency: number, index: number, mode: 'sea' | 'land'): TurbineStatus => {
+  if (mode === 'sea') {
+    if (efficiency < 72 || power < 1.1 || index % 11 === 0) return 'warning'
+    return 'online'
+  }
+
+  if (efficiency < 68 || power < 0.9) return 'offline'
+  if (efficiency < 78 || index % 5 === 0) return 'warning'
+  return 'online'
+}
+
+const buildSceneTurbines = (
+  baseTurbines: TurbineData[],
+  count: number,
+  mode: 'sea' | 'land',
+): TurbineData[] => {
+  if (baseTurbines.length === 0) return []
+
+  return Array.from({ length: count }, (_, index) => {
+    const source = baseTurbines[index % baseTurbines.length]
+    const phase = index * 0.57
+    const powerMultiplier = mode === 'sea'
+      ? 1.08 + Math.sin(phase) * 0.12
+      : 0.78 + Math.cos(phase) * 0.16
+    const efficiencyOffset = mode === 'sea'
+      ? 3 + Math.sin(phase * 0.8) * 2
+      : -7 + Math.cos(phase * 1.1) * 4
+
+    const power = clamp(source.power * powerMultiplier, 0.4, 6.5)
+    const efficiency = clamp(source.efficiency + efficiencyOffset, 58, 99)
+    const speedFactor = clamp(source.speedFactor * (mode === 'sea' ? 1.08 : 0.82), 0.35, 1.7)
+    const rpm = clamp(source.rpm * (mode === 'sea' ? 1.1 : 0.86), 4, 24)
+    const temperature = source.temperature + (mode === 'sea' ? -2.4 : 3.1) + Math.sin(phase) * 1.4
+    const vibration = clamp(source.vibration * (mode === 'sea' ? 0.92 : 1.24), 0.02, 0.42)
+    const status = deriveStatus(power, efficiency, index, mode)
+    const id = index + 1
+
+    return {
+      ...source,
+      id,
+      name: mode === 'sea' ? `SEA_TURBINE_${String(id).padStart(2, '0')}` : `LAND_TURBINE_${String(id).padStart(2, '0')}`,
+      power,
+      efficiency,
+      speedFactor,
+      rpm,
+      temperature,
+      vibration,
+      status,
+    }
+  })
+}
+
+const buildSceneSnapshot = (base: WindFarmSnapshot, mode: 'sea' | 'land'): WindFarmSnapshot => {
+  const count = mode === 'sea'
+    ? Math.max(base.turbines.length + 4, 14)
+    : Math.max(6, Math.floor(base.turbines.length * 0.55))
+
+  const turbines = buildSceneTurbines(base.turbines, count, mode)
+  const onlineCount = turbines.filter((t) => t.status === 'online').length
+  const warningCount = turbines.filter((t) => t.status === 'warning').length
+  const offlineCount = turbines.filter((t) => t.status === 'offline').length
+  const totalPowerMW = Number(turbines.reduce((acc, t) => acc + t.power, 0).toFixed(1))
+
+  const energyHistory = base.energyHistory.map((value, index) => {
+    const wave = Math.sin(index * 0.42) * (mode === 'sea' ? 6 : 4)
+    const shifted = mode === 'sea' ? value + 14 + wave : value - 16 + wave
+    return clamp(Math.round(shifted), 8, 98)
+  })
+
+  const environment = {
+    windSpeed: Number((base.environment.windSpeed + (mode === 'sea' ? 3.1 : -2.6)).toFixed(1)),
+    windDirection: mode === 'sea'
+      ? (base.environment.windDirection + 18) % 360
+      : (base.environment.windDirection + 240) % 360,
+    turbulence: Number(clamp(base.environment.turbulence + (mode === 'sea' ? 0.03 : -0.02), 0.02, 0.25).toFixed(2)),
+    humidity: clamp(base.environment.humidity + (mode === 'sea' ? 10 : -18), 28, 96),
+    temperature: Number((base.environment.temperature + (mode === 'sea' ? -1.4 : 4.8)).toFixed(1)),
+    airPressure: Math.round(base.environment.airPressure + (mode === 'sea' ? -5 : 6)),
+  }
+
+  const alerts: Alert[] = turbines
+    .filter((t) => t.status !== 'online')
+    .slice(0, mode === 'sea' ? 6 : 4)
+    .map((t, idx) => ({
+      id: `${mode}-${base.timestamp}-${t.id}-${idx}`,
+      turbineName: t.name,
+      message: t.status === 'offline'
+        ? 'offline due to safety lockout'
+        : mode === 'sea'
+          ? 'gust instability detected over sea sector'
+          : 'terrain turbulence anomaly on inland field',
+      severity: t.status === 'offline' ? 'critical' : 'warning',
+      timestamp: base.timestamp - idx * 12_000,
+    }))
+
+  return {
+    ...base,
+    turbines,
+    environment,
+    energyHistory,
+    alerts,
+    summary: {
+      totalPowerMW,
+      capacityPercent: clamp(
+        Math.round((totalPowerMW / (count * 5.5)) * 100),
+        12,
+        100,
+      ),
+      optimalCount: onlineCount,
+      totalCount: count,
+      alertCount: warningCount + offlineCount,
+    },
+  }
+}
+
 export const Dashboard = () => {
   const farm = useWindFarmData()
   const navigate = useNavigate()
+  const [viewportView, setViewportView] = useState<'sea' | 'land'>('sea')
   const [dismissedAlerts, setDismissedAlerts] = useState<Set<string>>(new Set())
   const [focusTurbineIndex, setFocusTurbineIndex] = useState<number | null>(null)
   const [contextMenuTurbine, setContextMenuTurbine] = useState<{ id: number; name: string } | null>(null)
@@ -68,18 +188,29 @@ export const Dashboard = () => {
 
   const fpsColor = perf.fps >= 55 ? 'var(--green-online)' : perf.fps >= 30 ? 'var(--amber-warning)' : 'var(--red-critical)'
 
-  const speedFactors = useMemo(
-    () => farm?.turbines.map((t) => t.speedFactor) ?? Array(10).fill(0),
-    [farm?.turbines]
+  const scene = useMemo(
+    () => (farm ? buildSceneSnapshot(farm, viewportView) : null),
+    [farm, viewportView]
   )
 
-  const windSpeed = farm?.environment.windSpeed ?? 7
-  const windDirection = farm?.environment.windDirection ?? 225
+  const speedFactors = useMemo(
+    () => scene?.turbines.map((t) => t.speedFactor) ?? Array(10).fill(0),
+    [scene?.turbines]
+  )
+
+  const windSpeed = scene?.environment.windSpeed ?? 7
+  const windDirection = scene?.environment.windDirection ?? 225
 
   const activeAlerts = useMemo(
-    () => (farm?.alerts.filter((a) => !dismissedAlerts.has(a.id)) ?? []).slice(-5),
-    [farm?.alerts, dismissedAlerts]
+    () => (scene?.alerts.filter((a) => !dismissedAlerts.has(a.id)) ?? []).slice(-5),
+    [scene?.alerts, dismissedAlerts]
   )
+
+  useEffect(() => {
+    setDismissedAlerts(new Set())
+    setContextMenuTurbine(null)
+    setFocusTurbineIndex(null)
+  }, [viewportView])
 
   useEffect(() => {
     if (!contextMenuTurbine) return
@@ -94,7 +225,7 @@ export const Dashboard = () => {
     return () => window.removeEventListener('keydown', handleEsc)
   }, [contextMenuTurbine])
 
-  if (!farm) {
+  if (!scene) {
     return (
       <div className="dashboard" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <span style={{ fontFamily: 'var(--font-mono)', color: 'var(--cyan-primary)', fontSize: 14 }}>
@@ -104,7 +235,7 @@ export const Dashboard = () => {
     )
   }
 
-  const { turbines, environment: env, summary, energyHistory } = farm
+  const { turbines, environment: env, summary, energyHistory } = scene
 
   return (
     <div className="dashboard">
@@ -122,6 +253,7 @@ export const Dashboard = () => {
               turbineCount={turbines.length}
               speedFactors={speedFactors}
               focusTurbineIndex={focusTurbineIndex}
+              sceneMode={viewportView}
             />
           </Suspense>
         </Canvas>
@@ -145,6 +277,30 @@ export const Dashboard = () => {
           <button className="topbar__icon-btn"><Bell size={18} /></button>
           <span className="dashboard__topbar-time">{timeStr} — {dateStr}</span>
         </div>
+      </div>
+
+      {/* VIEWPORT MENU SWITCH */}
+      <div className="dashboard__viewport-menu" role="tablist" aria-label="Viewport view mode">
+        <button
+          className={`dashboard__viewport-menu-btn ${viewportView === 'sea' ? 'dashboard__viewport-menu-btn--active' : ''}`}
+          onClick={() => setViewportView('sea')}
+          role="tab"
+          aria-selected={viewportView === 'sea'}
+          aria-label="Sea view"
+          title="Sea view"
+        >
+          <Waves size={14} />
+        </button>
+        <button
+          className={`dashboard__viewport-menu-btn ${viewportView === 'land' ? 'dashboard__viewport-menu-btn--active' : ''}`}
+          onClick={() => setViewportView('land')}
+          role="tab"
+          aria-selected={viewportView === 'land'}
+          aria-label="Land view"
+          title="Land view"
+        >
+          <Trees size={14} />
+        </button>
       </div>
 
       {/* ALERT BANNERS */}

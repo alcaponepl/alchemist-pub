@@ -1818,7 +1818,13 @@
           "ref": "ZQ1wu",
           "x": 1360,
           "y": 612,
-          "name": "aiBubble"
+          "name": "aiBubble",
+          "descendants": {
+            "RfqiC": {
+              "x": 16,
+              "y": 16
+            }
+          }
         },
         {
           "type": "frame",
@@ -2345,6 +2351,75 @@
                       "fontWeight": "normal"
                     }
                   ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "pFIVJ",
+          "x": 1070,
+          "y": 72,
+          "name": "viewportMenu",
+          "width": 64,
+          "height": 70,
+          "fill": "#141416CC",
+          "cornerRadius": "$--radius-md",
+          "stroke": {
+            "align": "inside",
+            "thickness": 1,
+            "fill": "#2A2A3044"
+          },
+          "layout": "vertical",
+          "gap": 8,
+          "padding": 8,
+          "children": [
+            {
+              "type": "frame",
+              "id": "qjc2m",
+              "name": "seaViewBtn",
+              "width": "fill_container",
+              "height": 24,
+              "fill": "#2A2A3055",
+              "cornerRadius": "$--radius-sm",
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "Brjwn",
+                  "name": "seaIcon",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "waves",
+                  "iconFontFamily": "lucide",
+                  "fill": "$--cyan-primary"
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "ieQaw",
+              "name": "landViewBtn",
+              "width": "fill_container",
+              "height": 24,
+              "fill": "#2A2A3055",
+              "cornerRadius": "$--radius-sm",
+              "layout": "vertical",
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "icon_font",
+                  "id": "PhZ5l",
+                  "name": "landIcon",
+                  "width": 14,
+                  "height": 14,
+                  "iconFontName": "trees",
+                  "iconFontFamily": "lucide",
+                  "fill": "$--green-online"
                 }
               ]
             }
