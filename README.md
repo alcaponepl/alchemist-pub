@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+# Alchemist
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive 3D dashboard for wind farm monitoring (digital twin) with `sea/land` modes, real-time telemetry, alerts, and turbine detail screens.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Product landing page with a wind farm preview.
+- Operational dashboard with:
+  - 3D scene (`@react-three/fiber`, `three`, `@react-three/drei`)
+  - environment and energy production metrics
+  - turbine list with statuses (`online`, `warning`, `offline`)
+  - warning/critical alerts
+  - scene performance panels
+- Detailed single turbine view (`/dashboard/turbine/:turbineId`).
+- UI pages: login, register, settings.
+- Data is currently simulated locally via `windFarmSimulator` (no backend yet).
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19 + TypeScript
+- Vite 7
+- React Router 7
+- Three.js + React Three Fiber + Drei
+- Lucide Icons
+- Firebase Hosting (static build deployment)
+- Optional: WebAssembly (Rust + `wasm-pack`) for compute logic
 
-## Expanding the ESLint configuration
+## Requirements
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js `>= 22.12.0` (recommended; Vite 7 requires at least this version in the 22.x line)
+- npm
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## Local Development
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app starts by default at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Scripts
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- `npm run dev` - development mode (Vite)
+- `npm run build` - production build (`tsc -b && vite build`)
+- `npm run preview` - local preview of the production build
+- `npm run lint` - linting
+- `npm run wasm:build` - build WASM module from `src-rust`
+- `npm run deploy` - deploy to Firebase Hosting
+
+## Firebase Hosting Deployment
+
+This repo already includes SPA hosting config in `firebase.json`:
+
+- `public: dist`
+- rewrite `** -> /index.html`
+- `predeploy: npm run build`
+
+Steps:
+
+1. Login to Firebase CLI:
+   ```bash
+   npx firebase login
+   ```
+2. Set your Firebase `project id` in `.firebaserc` (locally; file is in `.gitignore`).
+3. Run deploy:
+   ```bash
+   npm run deploy
+   ```
+
+## Project Structure
+
+```text
+src/
+  components/         # UI components and 3D scene
+  hooks/              # hooks (simulated data, wasm)
+  pages/              # landing, dashboard, turbine details, auth, settings
+  services/           # wind farm telemetry simulator
+  types/              # domain types (windFarm)
+src-rust/             # Rust/WASM module (optional)
+firebase.json         # Firebase Hosting configuration
 ```
+
+## Routing
+
+- `/` - Landing page
+- `/dashboard` - Dashboard 3D
+- `/dashboard/turbine/:turbineId` - Turbine details
+- `/login` - Login (UI)
+- `/register` - Register (UI)
+- `/settings` - Settings (UI)
+
+## Notes
+
+- The project currently uses a local data simulator (`src/services/windFarmSimulator.ts`).
+- You may see a large JS bundle warning during build; this is expected for a 3D-heavy scene and graphics dependencies.
